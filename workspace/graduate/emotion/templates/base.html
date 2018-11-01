@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head><link rel="stylesheet" href="{%static 'css/style.css' %}" media="all"/>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script text="text/javascript" src="{%static 'js/jquery-func.js' %}"></script>
+    {% block script %} {% endblock script%}
+    <!--[if IE 6]>
+    <link rel="stylesheet" href="css/ie6.css" type="text/css" media="all"/><![endif]-->
+    <meta charset="UTF-8">
+    <title>메인</title>
+</head>
+<body>
+
+<div id="shell">
+    <div id="header">
+        <h1 id="logo"><a href="#">MovieHunter</a></h1>
+        <div id="navigation">
+            <ul>
+                <li><a class="active" href="{%url 'logout_process' %}">로그아웃</a></li>
+                <li><a href="{% url 'change_password' %}">비밀번호 변경</a></li>
+            </ul>
+        </div>
+
+        <div id="sub-navigation">
+
+            <div id="search">
+                <form  method="get" accept-charset="utf-8" action="{% url 'search_video' %}">
+
+                    <input type="text" name="search-field" placeholder="검색하기" id="search-field"
+                         class="blink search-field"/>
+                    <input type="submit" value="검색" class="search-button"/>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div>
+
+        {% block content %} {% endblock content%}
+    </div>
+</div>
+</body>
+</html>

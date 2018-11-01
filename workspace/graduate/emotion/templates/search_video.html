@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{$ load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block script %}
+     <script>
+
+	$(document).ready(function() {
+	    var search_query = "{{sq}}";
+	        var sTargetUrl2 = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=" + search_query + "&maxResults=50&key=AIzaSyA_O4ivUdtFpJOqbbNpVsIGrIgiQSAxld8";
+            		 $("#get_view").empty();
+    $.ajax({
+    				type: "POST",
+    				url: sTargetUrl2,
+    				dataType: "jsonp",
+    				 async: false,
+    				success: function(jdata) {
+    					console.log(jdata);
+
+    					$(jdata.items).each(function(i){
+    					var div= $("<div/>").addClass('movie');
+    					var div2 = $("<div/>").addClass('movie-image');
+    					var a = $("<a/>").attr("href","https://youtu.be/"+this.id.videoId);
+    					var img = $("<img/>").attr("src",this.snippet.thumbnails.medium.url);
+
+                      var text = $("<div/>").addClass('multiple-line-ellipsis');
+                      text.html(this.snippet.title);
+    	              var p = $("<p/>").attr("text",this.snippet.title);
+    	    	$("#get_view").append(div.append(div2.append(a.append(img))).append(text));
+    	           //   $("#get_view").append(p);
+    		  	}).promise().done(function(){
+    						if(jdata.prevPageToken){
+    							$("#nav_view").append("<a href='javascript:fnGetList(\""+jdata.prevPageToken+"\");'><이전페이지></a>");
+    						}
+    						if(jdata.nextPageToken){
+    							$("#nav_view").append("<a href='javascript:fnGetList(\""+jdata.nextPageToken+"\");'><다음페이지></a>");
+    						}
+    					});
+    				},
+    				error:function(xhr, textStatus) {
+    					console.log(xhr.responseText);
+    					alert("지금은 시스템 사정으로 인하여 요청하신 작업이 이루어지지 않았습니다.\n잠시후 다시 이용하세요.[2]");
+    					return;
+    				}
+    			});
+    	});
+
+    </script>
+    {% endblock %}
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% block content %}
+ <div id="main">
+        <div id="content">
+            <div class="box">
+                <div class="head">
+                    <h2>검색 결과</h2>
+          <p class="text-right"><a href="{% url 'moviemain' %}">메인으로 </a></p>
+
+
+                </div>
+                <div id="get_view"></div>
+
+                <div class="cl">&nbsp;</div>
+            </div>
+        </div>
+ </div>
+{% endblock  %}
+</body>
+</html>
